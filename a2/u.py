@@ -130,6 +130,8 @@ class SuffixTree:
 
         """
         print("Node Insert")
+        ## Set internal node which we are inserting from to new_internal_node
+        self.new_internal_node = self.aNode
         B = self.aNode
         BC = Edge(start=j, end=-1, string=self.text)
         C = Node(incoming_edge=BC, link_to=self.root, ID=self.get_node_id())
@@ -185,7 +187,7 @@ class SuffixTree:
                     else None
                 )  # May be none if the correct check/insertion is at a node
                 self.aEdge = (
-                    self.aNode.children[next_char]
+                    self.aNode.children[next_char].incoming_edge
                     if next_char and next_char in self.aNode.children
                     else None
                 )
@@ -229,7 +231,7 @@ class SuffixTree:
                 ## Unresolved internal node exists : link it to last node traversed to when checking for remainder
                 if unresolved is not None:
                     self._suffix_link(from_node=unresolved, to_node=self.aNode)
-                print(f"Suffix link set from {unresolved} to {self.aNode}")
+                    print(f"Suffix link set from {unresolved} to {self.aNode}")
                 break
 
             ## An insertion occured
@@ -238,6 +240,7 @@ class SuffixTree:
 
                 ## Not at the root node : follow suffix link from active node
                 if self.aNode != self.root:
+                    print(f"\n Following suffix link to Node {self.aNode.link_to}")
                     self.aNode = (
                         self.aNode.link_to
                     )  # Links to another internal node, or root node if no alternative suffix link was set
@@ -295,18 +298,16 @@ class SuffixTree:
                 tree_icon = "└─"  # "├─"
                 new_indent = indent + "| "
 
-            # Fetch the substring represented by the edge
-            # if child.incoming_edge.value(self.text, self.end) == "":
-            #     print(f"Missing : {child}")
             e = child.incoming_edge
             edge_label = f" {e.value(self.text, self.end)} ({e.start}:{e.end}) "
 
             # Check if the node has an incoming edge and display it appropriately
             node_label = f"Node({child.id})"  # {child.incoming_edge.start}:{child.incoming_edge.end})"  # f"Node({child.incoming_edge.value(self.text, self.end)})"
-            print(f"{indent}{tree_icon}{edge_label}")  # ---> {node_label}
+            print(f"{indent}{tree_icon}{edge_label} ---> {node_label}")
             self.print_tree(child, new_indent, last and i == len(sorted_children) - 1)
 
 
+# s = "abcabxabcd$"
 s = "abcabxabcd$"
 stree = SuffixTree(s)
 stree.build_suffix_tree()
