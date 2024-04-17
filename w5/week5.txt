@@ -1,0 +1,60 @@
+FOR I IN RANGE(1, N-1)
+	
+
+
+1. SKIP COUNTING: 
+	when have remaining characters, only compare at the intersections
+2. SPACE EFFICIENT REPRESNETAIOTN OF EDGE LABELS
+	instead of storing strings, store indices (linear space)
+3. EXTENSION TERMINATION CRITERION (THE SHOW STOPPER)
+	rule 3 once for a given extension, rule 3 for rest of phase. so just stop. not going to insert
+4. RAPID LEAF EXTENSIONS
+	after rule 1 in a given phase, rule one for every phase other than up to the same j. string goes from first index to some global pointer.  update global pointer -> and 1..j update by defualt
+5. RULE 3'S REQUIRE A LITTLE MORE THAN NOTHING
+	can't stop fully due to suffix links	
+6. SPEEDING UP TRAVERSAL WITH SUFFIX LINKS
+
+
+suffix links allow us to move faster through our tree 
+shortest strings have more structure
+create link between xy(alpha) -> y(alpha) 
+
+how to make sufix link - traverse past intermediate node = active node. 
+any text path active node is called the remainder. hold references to both 
+active node -> enables backtracking . 
+remiander n
+
+only do skip counting when have a remainder 
+every internal node has a suffix links
+when we rule 2 have variable : pending
+hasn't got a link yet
+pending next rule two insertion 
+
+WORSE CASE : BINARY TREE, SPLITS AT EVERY COMPARISON
+STORE STRING AT EACH - N^2 space
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+M
+M*N
