@@ -15,8 +15,8 @@ class Edge:
     def length(self, global_end):
         return (global_end if self.end == -1 else self.end) - self.start + 1
 
-    def __eq__(self, other):
-        return self.value == other.value if isinstance(other, Edge) else False
+    # def __eq__(self, other):
+    #     return self.value == other.value if isinstance(other, Edge) else False
 
     def __repr__(self):
         return f"{self.value}|{self.start}:{self.end}"
