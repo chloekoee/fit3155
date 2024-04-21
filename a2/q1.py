@@ -1,4 +1,5 @@
 from new_nodes import Node, Edge
+import pprint
 
 
 class SuffixTree:
@@ -6,7 +7,7 @@ class SuffixTree:
         self.node_id += 1
         return self.node_id
 
-    def __init__(self, string):
+    def __init__(self, string, indices):
         self.node_id = -1
         self.root = Node(ID=self.get_node_id())
         self.root.link_to = self.root
@@ -18,7 +19,11 @@ class SuffixTree:
         self.remainder = 0
         self.text = string
         self.end = -1
-        self.output = []
+
+        ## Create hashmap of the indices that need to have their rank returnd
+        self.ranks = {(item - 1): None for item in indices}
+        self.currentRank = 0
+        self.remainingIndices = len(self.ranks)
 
         self.last_internal_node = None  ## Holds the last created/modified internal node
 
@@ -196,11 +201,17 @@ class SuffixTree:
         # Return edges values based on their value, which presumes lexicographic order.
         return sorted(edges.values(), key=lambda e: e.value)
 
-    def _dfs(self, node):
-        ## Base case: If this is a leaf node (no outgoing edges)
-        if not node.edges:
-            if node.suffixID is not None:
-                self.output.append(node.suffixID)
+    def _dfs(self, node):  ## Returns True if all no remaining indices left
+        if self.remainingIndices == 0:
+            print(f" Terminating early at {self.currentRank}th smallest suffix")
+            return True
+
+        if not node.edges:  ## Base Case: If this is a leaf node
+            self.currentRank += 1  ## Increment current rank each time encounter leaf
+            # If this node is a wanted suffix
+            if node.suffixID in self.ranks:
+                self.ranks[node.suffixID] = self.currentRank
+                self.remainingIndices -= 1  ## Accounting for 1 - indexing
             return
 
         ## No chance of node having been visited already
@@ -208,14 +219,18 @@ class SuffixTree:
         if not node.sorted_edges:
             node.sorted_edges = self._sort_edges(node.edges)
 
-        ## Visit children nodes in lexicographic order
-        for child_edge in node.sorted_edges:
-            self._dfs(child_edge.tail)
+        ## Recursive Case: visit outgoing edges lexicographically
+        for childEdge in node.sorted_edges:
+            if self._dfs(node=childEdge.tail):
+                return True
+
+        return False
 
     def get_sorted_suffixes(self):
         ## Starting from root
-        self._dfs(self.root)
-        print(self.output)
+        self._dfs(node=self.root)
+        print(self.ranks)
+        pprint.pprint(list(self.ranks.values()))
 
     def print_tree(self, node=None, indent="", last=True):
         """Recursive function to print the tree"""
@@ -251,7 +266,7 @@ class SuffixTree:
 
 
 # s = "xabcxacxabd$"
-s = "mississipi$"
-stree = SuffixTree(s)
+s = "mississippi$"
+stree = SuffixTree(s, [3])  # , 6, 7])
 stree.build_suffix_tree()
 stree.get_sorted_suffixes()
