@@ -18,6 +18,7 @@ class SuffixTree:
         self.remainder = 0
         self.text = string
         self.end = -1
+        self.output = []
 
         self.last_internal_node = None  ## Holds the last created/modified internal node
 
@@ -40,7 +41,9 @@ class SuffixTree:
         B = AB.tail
 
         C = Node(link_to=self.root, ID=self.get_node_id())
-        D = Node(link_to=self.root, ID=self.get_node_id())
+        D = Node(
+            link_to=self.root, ID=self.get_node_id(), suffixID=j - self.remainder + 1
+        )
 
         CB = Edge(start=splitEnd, end=AB.end, head=C, tail=B, value=self.text[splitEnd])
         CD = Edge(start=j, end=-1, head=C, tail=D, value=self.text[j])
@@ -66,7 +69,9 @@ class SuffixTree:
         # print("Node Insert")
         ## Set internal node which we are inserting from to last_internal_node
         A = self.aNode
-        B = Node(link_to=self.root, ID=self.get_node_id())
+        B = Node(
+            link_to=self.root, ID=self.get_node_id(), suffixID=(j - self.remainder + 1)
+        )
         AB = Edge(head=A, tail=B, start=j, end=-1, value=self.text[j])
 
         A.edges[AB.value] = AB
@@ -121,7 +126,7 @@ class SuffixTree:
                     self.aLength += 1
                     return False
                 else:
-                    self._edge_insert(j)
+                    self._edge_insert(j=j)
                     return True
 
     def _suffix_link(self, to_node):
@@ -185,7 +190,32 @@ class SuffixTree:
             #     f"\naNode: {self.aNode} aEdge: {self.aEdge} aLength: {self.aLength} Remainder: {self.remainder}"
             # )
             # print(f"FINAL TREE FOR PHASE {j+1}")
-            # self.print_tree()
+            self.print_tree()
+
+    def _sort_edges(self, edges):
+        # Return edges values based on their value, which presumes lexicographic order.
+        return sorted(edges.values(), key=lambda e: e.value)
+
+    def _dfs(self, node):
+        ## Base case: If this is a leaf node (no outgoing edges)
+        if not node.edges:
+            if node.suffixID is not None:
+                self.output.append(node.suffixID)
+            return
+
+        ## No chance of node having been visited already
+        ## If this node has not yet had its edges sorted, then sort and visit edges
+        if not node.sorted_edges:
+            node.sorted_edges = self._sort_edges(node.edges)
+
+        ## Visit children nodes in lexicographic order
+        for child_edge in node.sorted_edges:
+            self._dfs(child_edge.tail)
+
+    def get_sorted_suffixes(self):
+        ## Starting from root
+        self._dfs(self.root)
+        print(self.output)
 
     def print_tree(self, node=None, indent="", last=True):
         """Recursive function to print the tree"""
@@ -210,7 +240,7 @@ class SuffixTree:
             )
 
             # Displaying the edge and the node it points to
-            node_label = f"({edge.tail.id if edge.tail else 'None'})"  # Assuming the tail is the node the edge points to
+            node_label = f"({edge.tail.suffixID if edge.tail else 'None'})"  # Assuming the tail is the node the edge points to
             print(f"{indent}{tree_icon}{edge_label} ──> {node_label}")
 
             # Recursive call to print the subtree rooted at the tail node of the edge
@@ -224,3 +254,4 @@ class SuffixTree:
 s = "mississipi$"
 stree = SuffixTree(s)
 stree.build_suffix_tree()
+stree.get_sorted_suffixes()

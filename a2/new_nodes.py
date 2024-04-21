@@ -23,10 +23,12 @@ class Edge:
 
 
 class Node:
-    def __init__(self, link_to=None, ID=None):
+    def __init__(self, link_to=None, ID=None, suffixID=None):
         self.id = ID
         self.link_to = link_to
         self.edges = {}  ## HashMap<Edge.start_value: Edge>
+        self.sorted_edges = None
+        self.suffixID = suffixID
 
     def __repr__(self):
         return f"Node {self.id}"
