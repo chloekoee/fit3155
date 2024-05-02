@@ -37,7 +37,7 @@ class SuffixTree:
         NEW:               |
                     (A)---(C)---(B) aNode = A, aEdge = AC, aLength = AC[0...x]
         """
-        # print("Edge Insert")
+        # #print("Edge Insert")
         AB = self.aNode.edges[self.aEdge]
 
         splitStart = AB.start + self.aLength - 1
@@ -71,7 +71,7 @@ class SuffixTree:
         NEW:
                     (A)---(B) aNode = B, aEdge = None, aLength = 0
         """
-        # print("Node Insert")
+        # #print("Node Insert")
         ## Set internal node which we are inserting from to last_internal_node
         A = self.aNode
         B = Node(
@@ -80,6 +80,7 @@ class SuffixTree:
         AB = Edge(head=A, tail=B, start=j, end=-1, value=self.text[j])
 
         A.edges[AB.value] = AB
+        self._suffix_link(A)
         self.last_internal_node = A  ## Set node inserted from to last internal node
 
     def _check_or_insert(self, j):
@@ -112,17 +113,22 @@ class SuffixTree:
 
                 ## Calculate next character after fully matching current edge
                 nextPosition = (
-                    j - self.remainder + edgeLength + 1
-                )  # currentEdge.start + edgeLength
+                    j
+                    - self.aLength
+                    + edgeLength
+                    # + 1  # j - self.remainder + edgeLength + 1
+                )  # currentEdge.start + edgeLength. should account for having traversed some already
                 # print(
                 #     f" nextPosition = j {j} - remainder {self.remainder} + edgeLength {edgeLength}"
                 # )
                 self.aEdge = (
                     self.text[nextPosition] if nextPosition < len(self.text) else None
                 )
+                # print(f" teext {self.text[nextPosition]}")
+                # print(nextPosition)
                 # print(f"aEdge {self.aEdge}")
                 self.aLength -= edgeLength
-                # print(f"aLength {self.aLength}")
+                # #print(f"aLength {self.aLength}")
                 return self._check_or_insert(j=j)
 
             else:  ## Else check/insert on current edge
@@ -137,7 +143,7 @@ class SuffixTree:
     def _suffix_link(self, to_node):
         if self.last_internal_node is not None:
             self.last_internal_node.link_to = to_node
-            print(f"Suffix link set from {self.last_internal_node} to {to_node}")
+            # #print(f"Suffix link set from {self.last_internal_node} to {to_node}")
             self.last_internal_node = None
 
     def _perform_phase(self, j):
@@ -147,14 +153,14 @@ class SuffixTree:
         self.last_internal_node = None
         self.remainder += 1
         self.end += 1
-        # print("\nRAPID LEAF EXPANSION TREE")
-        # self.print_tree()
+        # #print("\nRAPID LEAF EXPANSION TREE")
+        # self.#print_tree()
         i = 1
         while self.remainder > 0:
             # print(
             #     f"\n ITERATION {i} Inserting {self.text[j-self.remainder+1:j+1]}\naNode: {self.aNode} aEdge: {self.aEdge} aLength: {self.aLength} Remainder: {self.remainder}"
             # )
-            i += 1
+            # i += 1
 
             ## Insert/check for remaining suffix at active point
             inserted = self._check_or_insert(j=j)
@@ -162,7 +168,7 @@ class SuffixTree:
             if not inserted:  ## No insertion occured : skip to next phase
                 ## If unresolved internal node exists : link to last node traversed when checking for remainder
                 self._suffix_link(to_node=self.aNode)
-                # self.print_tree()
+                self.print_tree()
                 break
 
             else:  ## An insertion occured
@@ -176,7 +182,7 @@ class SuffixTree:
 
                     ## Traverse suffix link (back to root if no suffix link)
                     self.aNode = self.aNode.link_to
-                    # print(self.aNode)
+                    # #print(self.aNode)
                 ## At root node : stay at root node and decrement active length and increment active edge
                 else:
                     self.aLength = max(0, self.aLength - 1)
@@ -185,7 +191,7 @@ class SuffixTree:
                     if self.aLength > 0:  ## only have to if aLength> 0
                         self.aEdge = self.text[j - self.remainder + 1]
 
-                # self.print_tree()
+                self.print_tree()
 
     def build_suffix_tree(self):
         for j in range(len(self.text)):
@@ -195,7 +201,7 @@ class SuffixTree:
             #     f"\naNode: {self.aNode} aEdge: {self.aEdge} aLength: {self.aLength} Remainder: {self.remainder}"
             # )
             # print(f"FINAL TREE FOR PHASE {j+1}")
-            self.print_tree()
+            # self.#print_tree()
 
     def _sort_edges(self, edges):
         # Return edges values based on their value, which presumes lexicographic order.
@@ -203,7 +209,7 @@ class SuffixTree:
 
     def _dfs(self, node):  ## Returns True if all no remaining indices left
         if self.remainingIndices == 0:
-            print(f" Terminating early at {self.currentRank}th smallest suffix")
+            # #print(f" Terminating early at {self.currentRank}th smallest suffix")
             return True
 
         if not node.edges:  ## Base Case: If this is a leaf node
@@ -229,14 +235,16 @@ class SuffixTree:
     def get_sorted_suffixes(self):
         ## Starting from root
         self._dfs(node=self.root)
-        print(self.ranks)
-        pprint.pprint(list(self.ranks.values()))
+        # p#print.p#print(self.ranks)
+        return list(self.ranks.values())
+        # #print(self.ranks)
 
     def print_tree(self, node=None, indent="", last=True):
-        """Recursive function to print the tree"""
+        ## TURNED OFF #printING
+        """Recursive function to #print the tree"""
         if node is None:
             node = self.root
-            print("Root")
+            # print("Root")
 
         # Get a list of edges sorted by the edge's start for consistent output
         sorted_edges = sorted(node.edges.values(), key=lambda e: e.value)
@@ -255,10 +263,10 @@ class SuffixTree:
             )
 
             # Displaying the edge and the node it points to
-            node_label = f"({edge.tail.suffixID if edge.tail else 'None'})"  # Assuming the tail is the node the edge points to
-            print(f"{indent}{tree_icon}{edge_label} ──> {node_label}")
+            node_label = f"({edge.tail.id if edge.tail else 'None'})"  # Assuming the tail is the node the edge points to
+            # print(f"{indent}{tree_icon}{edge_label} ──> {node_label}")
 
-            # Recursive call to print the subtree rooted at the tail node of the edge
+            # Recursive call to #print the subtree rooted at the tail node of the edge
             if edge.tail:  # Ensuring that there is a tail node to recurse into
                 self.print_tree(
                     edge.tail, new_indent, last and i == len(sorted_edges) - 1
@@ -266,7 +274,13 @@ class SuffixTree:
 
 
 # s = "xabcxacxabd$"
-s = "mississippi$"
-stree = SuffixTree(s, [3])  # , 6, 7])
+# s = "mississippi$"
+# # s = "lcntczlclc$"
+s = "oroqtuunvbeoqpjweoqpdxqpxkos$"
+s = "coyljeogiymgd$"
+s = "blacrlzckwiuslcwqblkhdaosfbqmzeakbxgnlbrqykwc$"
+s = "wadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqe$"
+# # #print(range(len(s)))
+stree = SuffixTree(s, [i for i in range(1, len(s) + 1)])  # , 6, 7])
 stree.build_suffix_tree()
-stree.get_sorted_suffixes()
+print(stree.get_sorted_suffixes())
