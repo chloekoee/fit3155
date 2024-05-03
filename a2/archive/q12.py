@@ -1,4 +1,4 @@
-from nodes import Node, Edge
+from a2.archive.nodes import Node, Edge
 
 
 class SuffixTree:
