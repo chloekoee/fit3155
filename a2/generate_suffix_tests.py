@@ -4,7 +4,7 @@ import string
 tests = []
 for i in range(1):
 
-    for n in range(6, 300):
+    for n in range(6, 500):
 
         res = "".join(secrets.choice(string.ascii_lowercase) for _ in range(n)) + "$"
         tests.append(res)

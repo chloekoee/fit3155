@@ -1,4 +1,4 @@
-from new_nodes import Node, Edge
+from nodes import Node, Edge
 import pprint
 
 
@@ -37,7 +37,6 @@ class SuffixTree:
         NEW:               |
                     (A)---(C)---(B) aNode = A, aEdge = AC, aLength = AC[0...x]
         """
-        # #print("Edge Insert")
         AB = self.aNode.edges[self.aEdge]
 
         splitStart = AB.start + self.aLength - 1
@@ -281,6 +280,8 @@ s = "coyljeogiymgd$"
 s = "blacrlzckwiuslcwqblkhdaosfbqmzeakbxgnlbrqykwc$"
 s = "wadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqe$"
 # # #print(range(len(s)))
+s = "wadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqewadzmiavvanypqppunuiiqcihmhylwxkzyqlxbaecwjrjpmrpmiqxwyzrrclnlttrwilurykvccxyagmhznziccwnyfqgzttxtmqkqfnqghskniqvfnxlnylbndnezsojtqqfypmavbhvmkwpeikyzuaawjuozqgccgxtffoofhpvsqjlphrztkzupknnpqfsudwjkfffhhzgnjcighnkygqhramcbczbbrmyaqywrnqgxjhsqvjthpqkzfxjzkbrvtnyjncxrwjuvbdlqxcjncmwhubfmpzbvpcctrpqqe$"
+s = s + s
 stree = SuffixTree(s, [i for i in range(1, len(s) + 1)])  # , 6, 7])
 stree.build_suffix_tree()
 print(stree.get_sorted_suffixes())

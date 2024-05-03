@@ -1,6 +1,6 @@
 from itertools import zip_longest, islice
 
-from q1 import SuffixTree
+from archive.q12 import SuffixTree
 
 
 def to_int_keys_best(list):
