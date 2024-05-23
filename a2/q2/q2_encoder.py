@@ -1,9 +1,10 @@
 from bitarray import bitarray
-from q1 import SuffixTree
+from a2.q1.q1 import SuffixTree
 import sys
 from collections import defaultdict
 import heapq
 
+sys.path.insert(0, "/path/to/root_directory")
 """
 CHLOE KOE 
 33109109

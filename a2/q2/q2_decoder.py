@@ -238,15 +238,6 @@ class Decoder:
 
 
 if __name__ == "__main__":
-    encoding_file_path = "q2_encoder_output.bin"
-    output_file_name = "q2_decoder_output.txt"
-
-    # Clear the output file before starting the encoding process
-    open(output_file_name, "wb").close()
-    decoder = Decoder(encoding_file_path)
-    decoded_output = decoder.run()
-
-if __name__ == "__main__":
     # Clear the output file before starting the encoding process
     output_file_name = "q2_decoder_output.txt"
     open(output_file_name, "wb").close()
